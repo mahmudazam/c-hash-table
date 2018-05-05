@@ -30,9 +30,9 @@ main(int argc, char *argv[])
 
     // Test get:
     htab_item items[3] = {{(void*)5, (void*)23, NULL, NULL}, {0}, {0}};
-    ht->buckets[ht->hash((void*)5) % _DEFAULT_SIZE].head = &(items[0]);
-    ht->buckets[ht->hash((void*)5) % _DEFAULT_SIZE].tail = &(items[0]);
-    ht->buckets[ht->hash((void*)5) % _DEFAULT_SIZE].len = 1;
+    ht->buckets[ht->hash((void*)5) % _DEFAULT_NUM_BUCKETS].head = &(items[0]);
+    ht->buckets[ht->hash((void*)5) % _DEFAULT_NUM_BUCKETS].tail = &(items[0]);
+    ht->buckets[ht->hash((void*)5) % _DEFAULT_NUM_BUCKETS].len = 1;
     assert((void*)23 == get(ht, (void*)5));
 
     // Test set:

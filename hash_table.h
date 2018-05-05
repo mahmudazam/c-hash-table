@@ -2,7 +2,7 @@
 #ifndef HASH_TABLE_H
 #define HASH_TABLE_H
 
-#define _DEFAULT_SIZE 32
+#define _DEFAULT_NUM_BUCKETS 128
 
 typedef struct htab_item
 {

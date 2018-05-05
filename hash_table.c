@@ -59,9 +59,9 @@ new_hash_table(size_t (*hash)(void *), int (*eq)(void *k1, void *k2))
         return NULL;
     }
     ht->count = 0;
-    ht->bucket_list_size = _DEFAULT_SIZE;
-    ht->buckets = (bucket*)malloc(sizeof(bucket) * _DEFAULT_SIZE);
-    memset((void*)(ht->buckets), 0, (sizeof(bucket) * _DEFAULT_SIZE));
+    ht->bucket_list_size = _DEFAULT_NUM_BUCKETS;
+    ht->buckets = (bucket*)malloc(sizeof(bucket) * _DEFAULT_NUM_BUCKETS);
+    memset((void*)(ht->buckets), 0, (sizeof(bucket) * _DEFAULT_NUM_BUCKETS));
     ht->hash = hash;
     ht->eq = eq;
 
