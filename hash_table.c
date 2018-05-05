@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <hash_table.h>
 #include <string.h>
+#include <stdio.h>
 
 htab_item*
 _get_from_bucket(bucket *b, void *k, int (*eq)(void *, void *))
@@ -18,6 +19,37 @@ _get_from_bucket(bucket *b, void *k, int (*eq)(void *, void *))
     return NULL;
 }
 
+void
+_insert_tail(bucket *b, void *k, void *v)
+{
+    htab_item *insert = (htab_item*)malloc(sizeof(htab_item));
+    insert->next = NULL;
+    insert->prev = NULL;
+    insert->elem1 = k;
+    insert->elem2 = v;
+    if (NULL == b->tail)
+    {
+        b->head = insert;
+        b->tail = insert;
+        b->len = 1;
+    } else
+    {
+        b->tail->next = insert;
+        insert->prev = b->tail;
+        b->tail = insert;
+        b->len++;
+    }
+}
+
+htab_item*
+_get_htab_item(htab *t, void *k)
+{
+    size_t index = t->hash(k) % t->bucket_list_size;
+    bucket *b = &(t->buckets[index]);
+
+    return _get_from_bucket(b, k, t->eq);
+}
+
 htab*
 new_hash_table(size_t (*hash)(void *), int (*eq)(void *k1, void *k2))
 {
@@ -32,34 +64,33 @@ new_hash_table(size_t (*hash)(void *), int (*eq)(void *k1, void *k2))
     memset((void*)(ht->buckets), 0, (sizeof(bucket) * _DEFAULT_SIZE));
     ht->hash = hash;
     ht->eq = eq;
-    return ht;
-}
 
-htab_item*
-_get_htab_item(htab *t, void *k)
-{
-    size_t index = t->hash(k) % t->bucket_list_size;
-    bucket *b = &(t->buckets[index]);
-    return _get_from_bucket(b, k, t->eq);
+    return ht;
 }
 
 void*
 get(htab *t, void *k)
 {
-    return _get_htab_item(t, k)->elem2;
+    htab_item *item = _get_htab_item(t, k);
+
+    return (NULL != item) ? item->elem2 : NULL;
 }
 
 int
 set(htab *t, void *k, void *v)
 {
-    #if 0
     htab_item *existing =  _get_htab_item(t, k);
     if (NULL != existing)
     {
-        existing->
+        existing->elem2 = v;
+    } else
+    {
+        size_t index = t->hash(k) % t->bucket_list_size;
+        bucket *b = &(t->buckets[index]);
+        _insert_tail(b, k, v);
+        t->count++;
     }
-    return 0;
-    #endif
-    return 0;
+
+    return 1;
 }
 
