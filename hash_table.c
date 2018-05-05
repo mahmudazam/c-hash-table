@@ -10,7 +10,7 @@ _get_from_bucket(bucket *b, void *k, int (*eq)(void *, void *))
     htab_item *curr = b->head;
     while (NULL != curr)
     {
-        if (eq(curr->elem1, k))
+        if (eq(curr->key, k))
         {
             return curr;
         }
@@ -25,8 +25,8 @@ _insert_tail(bucket *b, void *k, void *v)
     htab_item *insert = (htab_item*)malloc(sizeof(htab_item));
     insert->next = NULL;
     insert->prev = NULL;
-    insert->elem1 = k;
-    insert->elem2 = v;
+    insert->key = k;
+    insert->value = v;
     if (NULL == b->tail)
     {
         b->head = insert;
@@ -73,7 +73,7 @@ get(htab *t, void *k)
 {
     htab_item *item = _get_htab_item(t, k);
 
-    return (NULL != item) ? item->elem2 : NULL;
+    return (NULL != item) ? item->value : NULL;
 }
 
 int
@@ -82,7 +82,7 @@ set(htab *t, void *k, void *v)
     htab_item *existing =  _get_htab_item(t, k);
     if (NULL != existing)
     {
-        existing->elem2 = v;
+        existing->value = v;
     } else
     {
         size_t index = t->hash(k) % t->bucket_list_size;

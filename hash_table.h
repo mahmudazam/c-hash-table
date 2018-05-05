@@ -6,8 +6,8 @@
 
 typedef struct htab_item
 {
-    void *elem1;
-    void *elem2;
+    void *key;
+    void *value;
     struct htab_item *next;
     struct htab_item *prev;
 } htab_item;
