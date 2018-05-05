@@ -2,6 +2,8 @@
 #ifndef HASH_TABLE_H
 #define HASH_TABLE_H
 
+#define _DEFAULT_SIZE 32
+
 typedef struct htab_item
 {
     void *elem1;
@@ -15,17 +17,19 @@ typedef struct bucket
     htab_item *head;
     htab_item *tail;
     size_t len;
-} pair_list;
+} bucket;
 
 typedef struct htab
 {
     size_t count;
-    htab_item *buckets;
+    bucket *buckets;
     size_t (*hash)(void *);
+    int (*eq)(void *, void *);
+    size_t bucket_list_size;
 } htab;
 
 htab*
-new_hash_table(size_t (*hash)(void *));
+new_hash_table(size_t (*hash)(void *), int (*eq)(void *, void *));
 
 void*
 get(htab *t, void *k);
